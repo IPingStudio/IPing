@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>Web Socket Client</title>
+</head> 
+
+<body> 
+
+<script type="text/javascript"> 
+
+var socket; 
+
+if (!window.WebSocket) { 
+
+    window.WebSocket = window.MozWebSocket; 
+
+} 
+
+// Javascript Websocket Client 
+
+if (window.WebSocket) { 
+
+    socket = new WebSocket("ws://localhost:8080/websocket");
+
+    socket.onopen = function(event) { 
+
+        var ta = document.getElementById('responseText'); 
+
+        ta.innerHTML = "Web Socket 打开！"; 
+
+}; 
+    socket.onmessage = function(event) { 
+
+        var ta = document.getElementById('responseText'); 
+
+        ta.innerHTML = ta.innerHTML + "<br>" + event.data ;
+
+    }; 
+
+    socket.onclose = function(event) { 
+
+        var ta = document.getElementById('responseText'); 
+
+        ta.innerHTML = ta.innerHTML + "Web Socket 关闭！"; 
+
+    }; 
+
+} else { 
+
+    alert("您的浏览器不支持 Web Socket."); 
+
+} 
+// Send Websocket data 
+
+function send() {
+    var message = document.getElementById("message");
+    var messageValue = message.value;
+    if (!window.WebSocket) { return; }
+    if (socket.readyState == WebSocket.OPEN) { 
+
+        socket.send(messageValue);
+        message.value = "";
+
+    } else { 
+
+        alert("socket 没有打开."); 
+
+    } 
+} 
+    document.keydown = function (evt){
+        var evt = windown.event?window.event:evt;
+        if(evt.keyCode == 13){
+            send();
+        }
+}
+
+</script>
+<h4>接收消息 :</h4> 
+
+<div id="responseText" style="width:500px;height:300px;border:2px solid gray"></div> 
+<h4>发送消息 :</h4> 
+
+<input type="text" id="message" name="message" value=""  placeholder="说点什么吧！！！"/>
+<input type="button" value="发送" onclick="send()" /> 
+
+</body> 
+
+</html>
